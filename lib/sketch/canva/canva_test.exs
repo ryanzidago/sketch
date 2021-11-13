@@ -20,7 +20,7 @@ defmodule Sketch.CanvaTest do
     end
   end
 
-  describe "draw_recantgle/3" do
+  describe "draw_recantgle/4" do
     test "draws a rectangle on the canva, at the position {x, y}, whose size is w * h", %{
       opts: opts
     } do
