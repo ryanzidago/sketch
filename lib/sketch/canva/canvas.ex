@@ -15,7 +15,9 @@ defmodule Sketch.Canvases.Canvas do
     timestamps()
   end
 
-  def get!(id), do: Repo.get!(Canvas, id)
+  def all, do: Repo.all(__MODULE__)
+
+  def get!(id), do: Repo.get!(__MODULE__, id)
 
   def insert!(canvas, attrs \\ %{}) do
     canvas

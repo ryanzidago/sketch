@@ -20,6 +20,13 @@ defmodule SketchWeb.Router do
     get "/", PageController, :index
   end
 
+  scope "/api" do
+    pipe_through :api
+
+    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: SketchWeb.Schema
+    forward "/", Absinthe.Plug, schema: SketchWeb.Schema
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", SketchWeb do
   #   pipe_through :api
