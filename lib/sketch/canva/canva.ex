@@ -66,6 +66,74 @@ defmodule Sketch.Canva do
     draw_on_canva(canva, cells_to_be_filled, character: character)
   end
 
+  def flood_fill(canva, {x, y}, opts) do
+    queue = :queue.new()
+    queue = :queue.in({x, y}, queue)
+
+    do_flood_fill(canva, queue, MapSet.new(), [], opts)
+  end
+
+  defp do_flood_fill(canva, {[], []}, _visited, _result, _opts), do: canva
+
+  defp do_flood_fill(canva, queue, visited, result, opts) do
+    {canva, queue, visited, result} =
+      Enum.reduce(1..:queue.len(queue), {canva, queue, visited, result}, fn _n,
+                                                                            {canva, queue,
+                                                                             visited, result} ->
+        {{:value, coordinates}, queue} = :queue.out(queue)
+
+        if MapSet.member?(visited, coordinates) do
+          {canva, queue, visited, result}
+        else
+          canva = fill(canva, coordinates, opts)
+          [up, right, down, left] = neighbours = neighbours(coordinates)
+          result = [neighbours | result]
+
+          visited = MapSet.put(visited, coordinates)
+
+          up = if canva[up] == " " && up not in visited, do: up
+          right = if canva[right] == " " && right not in visited, do: right
+          down = if canva[down] == " " && down not in visited, do: down
+          left = if canva[left] == " " && left not in visited, do: left
+
+          queue = if up, do: :queue.in(up, queue), else: queue
+          queue = if right, do: :queue.in(right, queue), else: queue
+          queue = if down, do: :queue.in(down, queue), else: queue
+          queue = if left, do: :queue.in(left, queue), else: queue
+
+          {canva, queue, visited, result}
+        end
+      end)
+
+    do_flood_fill(canva, queue, visited, result, opts)
+  end
+
+  defp fill(canva, {x, y}, opts) do
+    fill_character = Keyword.get(opts, :fill_character)
+    if canva[{x, y}] == " ", do: Map.put(canva, {x, y}, fill_character), else: canva
+  end
+
+  defp neighbours(coordinates) do
+    up = if can_go_up?(coordinates), do: up(coordinates)
+    right = if can_go_right?(coordinates), do: right(coordinates)
+    down = if can_go_down?(coordinates), do: down(coordinates)
+    left = if can_go_left?(coordinates), do: left(coordinates)
+
+    [up, right, down, left]
+  end
+
+  defp can_go_up?({_x, y}), do: y > 0
+  defp up({x, y}), do: {x, y - 1}
+
+  defp can_go_right?({x, _y}), do: x < 25 - 1
+  defp right({x, y}), do: {x + 1, y}
+
+  defp can_go_down?({_x, y}), do: y < 25 - 1
+  defp down({x, y}), do: {x, y + 1}
+
+  defp can_go_left?({x, _y}), do: x > 0
+  defp left({x, y}), do: {x - 1, y}
+
   def pretty_print(canva) do
     pretty_canva =
       for x <- 0..(24 - 1), into: "" do
