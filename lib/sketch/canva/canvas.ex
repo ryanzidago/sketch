@@ -4,17 +4,10 @@ defmodule EctoBoard do
   def type, do: :map
 
   def cast(board) when is_map(board) and not is_struct(board) do
-    board =
-      if board["0, 0"] do
-        board
-      else
-        for {{x, y}, character} <- board, reduce: %{} do
-          acc -> Map.put(acc, "#{x},#{y}", character)
-        end
-      end
-
     {:ok, board}
   end
+
+  def cast(_), do: :error
 
   def load(board) when is_map(board) do
     board =
@@ -31,7 +24,16 @@ defmodule EctoBoard do
   end
 
   def dump(board) when is_map(board) do
-    cast(board)
+    board =
+      if board["0, 0"] do
+        board
+      else
+        for {{x, y}, character} <- board, reduce: %{} do
+          acc -> Map.put(acc, "#{x},#{y}", character)
+        end
+      end
+
+    {:ok, board}
   end
 
   def dump(_), do: :error
@@ -60,13 +62,9 @@ defmodule Sketch.Canvases.Canvas do
   end
 
   def update!(canvas, attrs) do
-    canvas =
-      canvas
-      |> changeset(attrs)
-      |> Repo.update!()
-
-    {:ok, board} = EctoBoard.load(canvas.board)
-    %__MODULE__{canvas | board: board}
+    canvas
+    |> changeset(attrs)
+    |> Repo.update!()
   end
 
   defp changeset(canvas, attrs) when is_struct(attrs) do
