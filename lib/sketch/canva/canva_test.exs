@@ -79,6 +79,28 @@ defmodule Sketch.CanvaTest do
     end
   end
 
+  # - rectange at {3, 2} with w: 5, h: 3, outline_character: "@", fill_character: "X"
+  # - rectangle at {10, 3} with w: 14, h: 6, outline_character: "X, fill_character: "O
+  test "test fixutre 1" do
+    canva =
+      Canva.new()
+      |> Canva.draw_rectangle({3, 2}, {5, 3}, outline_character: "@", fill_character: "X")
+      |> Canva.draw_rectangle({10, 3}, {14, 6}, outline_character: "X", fill_character: "O")
+
+    expected = """
+    @@@@@
+    @XXX@  XXXXXXXXXXXXXX
+    @XXX@  XOOOOOOOOOOOOX
+    @@@@@  XOOOOOOOOOOOOX
+           XOOOOOOOOOOOOX
+           XOOOOOOOOOOOOX
+           XOOOOOOOOOOOOX
+           XXXXXXXXXXXXXX
+    """
+
+    assert String.split(Canva.pretty(canva)) == String.split(expected)
+  end
+
   defp all_cells do
     for x <- 0..(24 - 1), y <- 0..(24 - 1), into: MapSet.new() do
       {x, y}
