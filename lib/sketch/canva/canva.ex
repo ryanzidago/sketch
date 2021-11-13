@@ -68,9 +68,9 @@ defmodule Sketch.Canva do
 
   def pretty_print(canva) do
     pretty_canva =
-      for x <- 0..(25 - 1), into: "" do
+      for x <- 0..(24 - 1), into: "" do
         row =
-          for y <- 0..(25 - 1), into: "" do
+          for y <- 0..(24 - 1), into: "" do
             "#{canva[{x, y}]}"
           end
 
@@ -81,9 +81,9 @@ defmodule Sketch.Canva do
   end
 
   def pretty(canva) do
-    for x <- 0..(25 - 1), into: "" do
+    for x <- 0..(24 - 1), into: "" do
       row =
-        for y <- 0..(25 - 1), into: "" do
+        for y <- 0..(24 - 1), into: "" do
           "#{canva[{x, y}]}"
         end
 
