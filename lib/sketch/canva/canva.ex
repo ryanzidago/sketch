@@ -19,10 +19,12 @@ defmodule Sketch.Canva do
         draw_rectangle_with_single_character(canva, {x, y}, {w, h}, character: fill_character)
 
       {nil, outline_character} ->
-        draw_rectangle_with_single_character(canva, {x, y}, {w, h}, character: outline_character)
+        draw_rectangle_with_outline_character(canva, {x, y}, {w, h}, character: outline_character)
 
       {_fill_character, _outline_character} ->
-        draw_rectangle_with_outline(canva, {x, y}, {w, h}, opts)
+        canva
+        |> draw_rectangle_with_single_character({x, y}, {w, h}, character: fill_character)
+        |> draw_rectangle_with_outline_character({x, y}, {w, h}, character: outline_character)
     end
   end
 
@@ -31,30 +33,25 @@ defmodule Sketch.Canva do
     draw_on_canva(canva, cells_to_be_filled, character: character)
   end
 
-  defp draw_rectangle_with_outline(canva, {x, y}, {w, h}, opts) do
-    fill_character = Keyword.get(opts, :fill_character)
-    outline_character = Keyword.get(opts, :outline_character)
-
-    canva = draw_rectangle_with_single_character(canva, {x, y}, {w, h}, character: fill_character)
-
+  defp draw_rectangle_with_outline_character(canva, {x, y}, {w, h}, character: character) do
     canva =
       for n <- 0..(w - 1), reduce: canva do
-        canva -> Map.put(canva, {y, x + n}, outline_character)
+        canva -> Map.put(canva, {y, x + n}, character)
       end
 
     canva =
       for n <- 0..(h - 1), reduce: canva do
-        canva -> Map.put(canva, {y + n, x + w - 1}, outline_character)
+        canva -> Map.put(canva, {y + n, x + w - 1}, character)
       end
 
     canva =
       for n <- 0..(w - 1), reduce: canva do
-        canva -> Map.put(canva, {y + h, x + n}, outline_character)
+        canva -> Map.put(canva, {y + h - 1, x + n}, character)
       end
 
     canva =
       for n <- 0..(h - 1), reduce: canva do
-        canva -> Map.put(canva, {y + n, x}, outline_character)
+        canva -> Map.put(canva, {y + n, x}, character)
       end
 
     canva
