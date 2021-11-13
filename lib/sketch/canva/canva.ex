@@ -1,8 +1,8 @@
 defmodule Sketch.Canva do
   defguard is_within_canva(x, y) when x in 0..(24 - 1) and y in 0..(24 - 1)
 
-  def new do
-    for x <- 0..(24 - 1), y <- 0..(24 - 1), into: %{}, do: {{x, y}, " "}
+  def new({w, h} \\ {24, 24}) do
+    for x <- 0..(h - 1), y <- 0..(w - 1), into: %{}, do: {{x, y}, " "}
   end
 
   def draw_rectangle(canva, {x, y}, {w, h}, opts)

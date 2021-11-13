@@ -10,11 +10,19 @@ defmodule Sketch.CanvaTest do
     }
   end
 
-  describe "new/0" do
+  describe "new/{0, 1}" do
     test "creates a new empty 24 * 24 canva" do
       canva = Canva.new()
 
       Enum.each(all_cells(), fn {x, y} ->
+        assert Map.get(canva, {x, y}) == " "
+      end)
+    end
+
+    test "creates a new empty w * h canva" do
+      canva = Canva.new({21, 8})
+
+      Enum.each(all_cells({21, 8}), fn {x, y} ->
         assert Map.get(canva, {x, y}) == " "
       end)
     end
@@ -60,8 +68,8 @@ defmodule Sketch.CanvaTest do
     assert String.split(Canva.pretty(canva)) == String.split(expected)
   end
 
-  defp all_cells do
-    for x <- 0..(24 - 1), y <- 0..(24 - 1), into: MapSet.new() do
+  defp all_cells({w, h} \\ {24, 24}) do
+    for x <- 0..(h - 1), y <- 0..(w - 1), into: MapSet.new() do
       {x, y}
     end
   end
