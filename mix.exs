@@ -10,7 +10,8 @@ defmodule Sketch.MixProject do
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_paths: ~w(lib test)
     ]
   end
 
