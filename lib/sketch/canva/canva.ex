@@ -17,6 +17,9 @@ defmodule Sketch.Canva do
 
       {fill_character, nil} ->
         draw_rectangle_with_single_character(canva, {x, y}, {w, h}, character: fill_character)
+
+      {nil, outline_character} ->
+        draw_rectangle_with_single_character(canva, {x, y}, {w, h}, character: outline_character)
     end
   end
 

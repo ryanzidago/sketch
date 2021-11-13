@@ -58,6 +58,25 @@ defmodule Sketch.CanvaTest do
         end
       end)
     end
+
+    test "uses the `:outline_character` if it is the only character given in the opts " do
+      x = 0
+      y = 0
+      w = 2
+      h = 2
+      opts = [outline_character: "@"]
+
+      canva = Canva.draw_rectangle(Canva.new(), {x, y}, {w, h}, opts)
+      drawn_cells = all_cells_for_xy_and_wh({x, y}, {w, h})
+
+      Enum.each(all_cells(), fn {x, y} ->
+        if {x, y} in drawn_cells do
+          assert canva[{x, y}] == opts[:outline_character]
+        else
+          assert canva[{x, y}] == " "
+        end
+      end)
+    end
   end
 
   defp all_cells do
