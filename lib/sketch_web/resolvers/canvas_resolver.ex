@@ -7,17 +7,29 @@ defmodule SketchWeb.CanvasResolver do
   end
 
   def get(_parent, %{id: id}, _resolution) do
-    {:ok, CanvasRepo.get!(id)}
+    with %Canvas{} = canvas <- CanvasRepo.get(id) do
+      {:ok, canvas}
+    else
+      error -> error
+    end
   end
 
   def create_canvas(_parents, %{width: width, height: height}, _resolution) do
-    canvas = Canvas.new({width, height})
-    {:ok, CanvasRepo.insert!(canvas)}
+    with %Canvas{} = canvas <- Canvas.new({width, height}),
+         %Canvas{} = canvas <- CanvasRepo.insert(canvas) do
+      {:ok, canvas}
+    else
+      error -> error
+    end
   end
 
   def create_canvas(_parents, _args, _resolution) do
-    canvas = Canvas.new()
-    {:ok, CanvasRepo.insert!(canvas)}
+    with %Canvas{} = canvas <- Canvas.new(),
+         %Canvas{} = canvas <- CanvasRepo.insert(canvas) do
+      {:ok, canvas}
+    else
+      error -> error
+    end
   end
 
   def draw_rectangle(_parent, %{id: id, x: x, y: y, width: w, height: h} = args, _resolution) do
@@ -25,17 +37,23 @@ defmodule SketchWeb.CanvasResolver do
     outline_character = Map.get(args, :outline_character)
     opts = [fill_character: fill_character, outline_character: outline_character]
 
-    id
-    |> CanvasRepo.get!()
-    |> Canvas.draw_rectangle({x, y}, {w, h}, opts)
-    |> CanvasRepo.update()
+    with %Canvas{} = canvas <- CanvasRepo.get(id),
+         %Canvas{} = canvas <- Canvas.draw_rectangle(canvas, {x, y}, {w, h}, opts),
+         %Canvas{} = canvas <- CanvasRepo.update(canvas) do
+      {:ok, canvas}
+    else
+      error -> error
+    end
   end
 
   def flood_fill(_parent, %{id: id, x: x, y: y, fill_character: fill_character}, _resolution) do
-    id
-    |> CanvasRepo.get!()
-    |> Canvas.flood_fill({x, y}, fill_character: fill_character)
-    |> CanvasRepo.update()
+    with %Canvas{} = canvas <- CanvasRepo.get(id),
+         %Canvas{} = canvas <- Canvas.flood_fill(canvas, {x, y}, fill_character: fill_character),
+         %Canvas{} = canvas <- CanvasRepo.update(canvas) do
+      {:ok, canvas}
+    else
+      error -> error
+    end
   end
 
   def board(%{board: board}, _, _) do

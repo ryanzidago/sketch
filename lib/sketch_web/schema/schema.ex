@@ -53,7 +53,7 @@ defmodule SketchWeb.Schema do
       arg(:id, non_null(:id))
       arg(:x, non_null(:integer))
       arg(:y, non_null(:integer))
-      arg(:fill_character, :string)
+      arg(:fill_character, non_null(:string))
 
       resolve(&CanvasResolver.flood_fill/3)
     end
