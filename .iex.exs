@@ -1,1 +1,1 @@
-alias Sketch.Canvas
+alias Sketch.{Canvas, CanvasRepo, Repo}

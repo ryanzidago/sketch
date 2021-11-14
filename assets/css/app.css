@@ -87,3 +87,42 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 150px;
+}
+
+.left {
+  left: 0;
+  padding: 100px;
+}
+
+.right {
+  right: 0;
+}
+
+.canvas {
+  padding-top: 25px;
+}
+
+.cell {
+  border: none;
+}
+
+.grid-container {
+  display: gird;
+  grid-template-columns: auto auto auto;
+  grid-gap: 10px;
+  padding: 10px;
+}
+
+.grid-table {
+  grid-column-start: 0;
+  grid-column-end: 3;
+}

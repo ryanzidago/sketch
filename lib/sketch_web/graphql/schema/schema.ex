@@ -75,7 +75,13 @@ defmodule SketchWeb.Schema do
         {:ok, topic: "canvas:#{args.id}"}
       end)
 
-      trigger([:draw_rectangle, :flood_fill],
+      trigger(:draw_rectangle,
+        topic: fn
+          args -> "canvas:#{args.id}"
+        end
+      )
+
+      trigger(:flood_fill,
         topic: fn
           args -> "canvas:#{args.id}"
         end

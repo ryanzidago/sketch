@@ -2,10 +2,13 @@ defmodule Sketch.CanvasRepo do
   alias Sketch.Canvas
   alias Sketch.Repo
   import Ecto.Changeset
+  import Ecto.Query
 
   @permitted_params [:board, :width, :height]
 
   def all, do: Repo.all(Canvas)
+
+  def all_ids, do: Repo.all(from c in Canvas, select: c.id, order_by: [desc: c.updated_at])
 
   def get(id) do
     case Ecto.UUID.dump(id) do

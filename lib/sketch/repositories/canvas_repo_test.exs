@@ -3,11 +3,26 @@ defmodule Sketch.CanvasRepoTest do
 
   alias Sketch.{Canvas, CanvasRepo}
 
+  setup do
+    canvases = _ = for _ <- 1..3, do: CanvasRepo.insert!(Canvas.new())
+
+    {
+      :ok,
+      canvases: canvases
+    }
+  end
+
   describe "all/0" do
     test "returns all canvases saved in the database" do
-      _ = for _ <- 1..3, do: CanvasRepo.insert!(Canvas.new())
-
       assert [%Canvas{}, %Canvas{}, %Canvas{}] = CanvasRepo.all()
+    end
+  end
+
+  describe "all_ids/0" do
+    test "returns a list of all canvases' id" do
+      for canvas_id <- CanvasRepo.all_ids() do
+        assert CanvasRepo.get(canvas_id)
+      end
     end
   end
 
