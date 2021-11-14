@@ -44,5 +44,12 @@ defmodule Sketch.CanvasRepoTest do
       canvas = Canvas.flood_fill(canvas, {0, 0}, fill_character: "X")
       assert {:ok, ^canvas} = CanvasRepo.update(canvas)
     end
+
+    test "prevents updating the board's size" do
+      assert canvas = CanvasRepo.insert!(Canvas.new())
+      invalid_canvas = %Canvas{canvas | width: 0, height: 0}
+      assert {:ok, canvas} = CanvasRepo.update(canvas)
+      assert canvas != invalid_canvas
+    end
   end
 end

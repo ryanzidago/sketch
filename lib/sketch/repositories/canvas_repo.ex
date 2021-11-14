@@ -29,13 +29,13 @@ defmodule Sketch.CanvasRepo do
   def update(canvas) do
     Canvas
     |> Repo.get(canvas.id)
-    |> changeset(Map.from_struct(canvas))
+    |> changeset(Map.from_struct(canvas), [:board])
     |> Repo.update()
   end
 
-  defp changeset(canvas, attrs \\ %{}) do
+  defp changeset(canvas, attrs \\ %{}, permitted_params \\ @permitted_params) do
     canvas
-    |> cast(attrs, @permitted_params)
-    |> validate_required(@permitted_params)
+    |> cast(attrs, permitted_params)
+    |> validate_required(permitted_params)
   end
 end
