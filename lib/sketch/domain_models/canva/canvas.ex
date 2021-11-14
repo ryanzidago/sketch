@@ -90,7 +90,7 @@ defmodule Sketch.Canvas do
     queue = :queue.new()
     queue = :queue.in({x, y}, queue)
 
-    do_flood_fill(canvas, queue, MapSet.new(), [], fill_character: fill_character)
+    do_flood_fill(canvas, queue, MapSet.new(), fill_character: fill_character)
   end
 
   defp draw_rectangle_with_single_character(
@@ -140,25 +140,22 @@ defmodule Sketch.Canvas do
     draw_on_board(board, cells_to_be_filled, character: character)
   end
 
-  defp do_flood_fill(%__MODULE__{} = canvas, {[], []}, _visited, _result, _opts) do
+  defp do_flood_fill(%__MODULE__{} = canvas, {[], []}, _visited, _opts) do
     canvas
   end
 
-  defp do_flood_fill(%__MODULE__{} = canvas, queue, visited, result, opts) do
-    {board, queue, visited, result} =
-      Enum.reduce(1..:queue.len(queue), {canvas.board, queue, visited, result}, fn
-        _n, {board, queue, visited, result} ->
+  defp do_flood_fill(%__MODULE__{} = canvas, queue, visited, opts) do
+    {board, queue, visited} =
+      Enum.reduce(1..:queue.len(queue), {canvas.board, queue, visited}, fn
+        _n, {board, queue, visited} ->
           {{:value, coordinates}, queue} = :queue.out(queue)
 
           if MapSet.member?(visited, coordinates) do
-            {board, queue, visited, result}
+            {board, queue, visited}
           else
             board = fill(board, coordinates, opts)
 
-            [up, right, down, left] =
-              neighbours = neighbours({canvas.width, canvas.height}, coordinates)
-
-            result = [neighbours | result]
+            [up, right, down, left] = neighbours({canvas.width, canvas.height}, coordinates)
 
             visited = MapSet.put(visited, coordinates)
 
@@ -172,11 +169,11 @@ defmodule Sketch.Canvas do
             queue = if down, do: :queue.in(down, queue), else: queue
             queue = if left, do: :queue.in(left, queue), else: queue
 
-            {board, queue, visited, result}
+            {board, queue, visited}
           end
       end)
 
-    do_flood_fill(%__MODULE__{canvas | board: board}, queue, visited, result, opts)
+    do_flood_fill(%__MODULE__{canvas | board: board}, queue, visited, opts)
   end
 
   defp fill(board, {x, y}, opts) do
