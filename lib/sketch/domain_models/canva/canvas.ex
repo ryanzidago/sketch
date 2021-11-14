@@ -16,10 +16,16 @@ defmodule Sketch.Canvas do
   defguard is_within_canvas(canvas, x, y)
            when x in 0..canvas.width and y in 0..canvas.height
 
+  defguard is_positive(x, y) when x >= 0 and y >= 0
+
   def new(board_size \\ {24, 24})
 
   def new({w, h}) when w > 24 or h > 24 do
     {:error, "Dimension exceeds maximum board size (24 * 24"}
+  end
+
+  def new({w, h}) when not is_positive(w, h) do
+    {:error, "Width and height must be positive"}
   end
 
   def new({w, h}) do
@@ -29,11 +35,16 @@ defmodule Sketch.Canvas do
 
   def draw_rectangle(%__MODULE__{} = canvas, {x, y}, {_w, _h}, _opts)
       when not is_within_canvas(canvas, x + 1, y + 1) do
-    {:error, "Coordinates are outside of the board's surface"}
+    {:error, "Coordinates outside of the board's surface"}
   end
 
-  def draw_rectangle(%__MODULE__{} = canvas, {_x, _y}, {w, h}, _opts)
-      when not is_within_canvas(canvas, w, h) do
+  def draw_rectangle(%__MODULE__{} = _canvas, {x, y}, {_w, _h}, _opts)
+      when not is_positive(x, y) do
+    {:error, "Coordinates are negative"}
+  end
+
+  def draw_rectangle(%__MODULE__{} = canvas, {x, y}, {w, h}, _opts)
+      when not is_within_canvas(canvas, x + w, y + h) do
     {:error, "Drawing outside of the board is not allowed"}
   end
 
@@ -66,7 +77,12 @@ defmodule Sketch.Canvas do
 
   def flood_fill(%__MODULE__{} = canvas, {x, y}, _opts)
       when not is_within_canvas(canvas, x + 1, y + 1) do
-    {:error, "Coordinates {x,y} are outside of the board"}
+    {:error, "Coordinates outside of the board's surface"}
+  end
+
+  def flood_fill(%__MODULE__{} = _canvas, {x, y}, _opts)
+      when not is_positive(x, y) do
+    {:error, "Coordinates are negative"}
   end
 
   def flood_fill(%__MODULE__{board: board} = canvas, {x, y}, fill_character: fill_character)

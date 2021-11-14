@@ -4,9 +4,11 @@ defmodule Sketch.CanvasTest do
   alias Sketch.Canvas
 
   setup _ do
+    canvas = Canvas.new()
+
     {
       :ok,
-      opts: [fill_character: "X"]
+      canvas: canvas, opts: [fill_character: "X"]
     }
   end
 
@@ -25,6 +27,39 @@ defmodule Sketch.CanvasTest do
       Enum.each(all_cells({21, 8}), fn {x, y} ->
         assert Map.get(canvas.board, {x, y}) == " "
       end)
+    end
+
+    test "returns an `{:error, error}` Tuple if the dimensions exceed 24 * 24" do
+      assert {:error, "Dimension exceeds maximum board size (24 * 24"} = Canvas.new({100, 100})
+    end
+
+    test "returns an `{:error, error}` Tuple if the width or height are negative" do
+      assert {:error, "Width and height must be positive"} = Canvas.new({-100, -100})
+    end
+  end
+
+  describe "draw_rectangle/4" do
+    test "returns an `{:error, error}` Tuple if the coordinates are outside of the board's surface",
+         %{canvas: canvas} do
+      assert result = Canvas.draw_rectangle(canvas, {100, 100}, {1, 1}, fill_character: "X")
+      assert {:error, "Coordinates outside of the board's surface"} = result
+    end
+
+    test "returns an `{:error, error}` Tuple if the coordinates are negative", %{canvas: canvas} do
+      assert result = Canvas.draw_rectangle(canvas, {-1, -1}, {1, 1}, fill_character: "X")
+      assert {:error, "Coordinates are negative"} = result
+    end
+
+    test "returns an `{:error, error}` Tuple if the requested rectangle would be outside of the board",
+         %{canvas: canvas} do
+      assert result = Canvas.draw_rectangle(canvas, {20, 20}, {10, 10}, fill_character: "X")
+      assert {:error, "Drawing outside of the board is not allowed"} = result
+    end
+
+    test "returns an `{:error, error}` Tuple if neither fill_character nor outline_character were given",
+         %{canvas: canvas} do
+      assert result = Canvas.draw_rectangle(canvas, {10, 10}, {1, 1}, [])
+      assert {:error, "No fill_character or outline_character provided"} = result
     end
   end
 
