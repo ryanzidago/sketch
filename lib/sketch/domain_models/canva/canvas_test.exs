@@ -59,6 +59,44 @@ defmodule Sketch.CanvasTest do
       assert result = Canvas.draw_rectangle(canvas, {10, 10}, {1, 1}, [])
       assert {:error, "No fill_character or outline_character provided"} = result
     end
+
+    test "returns an `{:error, error}` if one of the fill or outline character isn't an ASCII encoded byte",
+         %{canvas: canvas} do
+      invalid_characters = [1, "wwww", "ö", "Ü", false, %{}]
+
+      for invalid_character <- invalid_characters do
+        result =
+          Canvas.draw_rectangle(canvas, {10, 10}, {1, 1}, fill_character: invalid_character)
+
+        assert {:error, "Character is not an ASCII encoded byte"} = result
+
+        result =
+          Canvas.draw_rectangle(canvas, {10, 10}, {1, 1}, outline_character: invalid_character)
+
+        assert {:error, "Character is not an ASCII encoded byte"} = result
+
+        result =
+          Canvas.draw_rectangle(canvas, {10, 10}, {1, 1},
+            fill_character: invalid_character,
+            outline_character: invalid_character
+          )
+
+        assert {:error, "Character is not an ASCII encoded byte"} = result
+      end
+    end
+  end
+
+  describe "flood_fill/3" do
+    test "returns an `{:error, error} if the fill_character is not an ASCII encoded byte",
+         %{canvas: canvas} do
+      invalid_characters = [1, "wwww", "ö", "Ü", false, %{}]
+
+      for invalid_character <- invalid_characters do
+        result = Canvas.flood_fill(canvas, {10, 10}, fill_character: invalid_character)
+
+        assert {:error, "Character is not an ASCII encoded byte"} = result
+      end
+    end
   end
 
   test "test fixutre 1" do

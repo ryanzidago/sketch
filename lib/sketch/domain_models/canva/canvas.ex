@@ -17,6 +17,7 @@ defmodule Sketch.Canvas do
            when x in 0..canvas.width and y in 0..canvas.height
 
   defguard is_positive(x, y) when x >= 0 and y >= 0
+  defguard is_ascii(character) when is_bitstring(character) and byte_size(character) == 1
 
   def new(board_size \\ {24, 24})
 
@@ -38,11 +39,6 @@ defmodule Sketch.Canvas do
     {:error, "Coordinates outside of the board's surface"}
   end
 
-  def draw_rectangle(%__MODULE__{} = _canvas, {x, y}, {_w, _h}, _opts)
-      when not is_positive(x, y) do
-    {:error, "Coordinates are negative"}
-  end
-
   def draw_rectangle(%__MODULE__{} = canvas, {x, y}, {w, h}, _opts)
       when not is_within_canvas(canvas, x + w, y + h) do
     {:error, "Drawing outside of the board is not allowed"}
@@ -54,20 +50,24 @@ defmodule Sketch.Canvas do
     fill_character = Keyword.get(opts, :fill_character)
     outline_character = Keyword.get(opts, :outline_character)
 
-    case {fill_character, outline_character} do
-      {nil, nil} ->
+    case {fill_character, outline_character, is_ascii(fill_character),
+          is_ascii(outline_character)} do
+      {nil, nil, _, _} ->
         {:error, "No fill_character or outline_character provided"}
 
-      {fill_character, nil} ->
+      {fill_character, nil, true, _} ->
         draw_rectangle_with_single_character(canvas, {x, y}, {w, h}, character: fill_character)
 
-      {nil, outline_character} ->
+      {nil, outline_character, _, true} ->
         draw_rectangle_with_outline_character(canvas, {x, y}, {w, h}, character: outline_character)
 
-      {_fill_character, _outline_character} ->
+      {_fill_character, _outline_character, true, true} ->
         canvas
         |> draw_rectangle_with_single_character({x, y}, {w, h}, character: fill_character)
         |> draw_rectangle_with_outline_character({x, y}, {w, h}, character: outline_character)
+
+      {_, _, _, _} ->
+        {:error, "Character is not an ASCII encoded byte"}
     end
   end
 
@@ -80,9 +80,9 @@ defmodule Sketch.Canvas do
     {:error, "Coordinates outside of the board's surface"}
   end
 
-  def flood_fill(%__MODULE__{} = _canvas, {x, y}, _opts)
-      when not is_positive(x, y) do
-    {:error, "Coordinates are negative"}
+  def flood_fill(%__MODULE__{} = _canvas, {_x, _y}, fill_character: fill_character)
+      when not is_ascii(fill_character) do
+    {:error, "Character is not an ASCII encoded byte"}
   end
 
   def flood_fill(%__MODULE__{board: board} = canvas, {x, y}, fill_character: fill_character)
