@@ -21,8 +21,8 @@ defmodule Sketch.Canvas do
 
   def new(board_size \\ {24, 24})
 
-  def new({w, h}) when w > 24 or h > 24 do
-    {:error, "Dimension exceeds maximum board size (24 * 24"}
+  def new({w, h}) when w > 100 or h > 100 do
+    {:error, "Dimension exceeds maximum board size (100 * 100"}
   end
 
   def new({w, h}) when w < 2 or h < 2 do
@@ -85,13 +85,12 @@ defmodule Sketch.Canvas do
     {:error, "Character is not an ASCII encoded byte"}
   end
 
-  def flood_fill(%__MODULE__{board: board} = canvas, {x, y}, fill_character: fill_character)
+  def flood_fill(%__MODULE__{} = canvas, {x, y}, fill_character: fill_character)
       when is_within_canvas(canvas, x, y) do
     queue = :queue.new()
     queue = :queue.in({x, y}, queue)
 
-    board = do_flood_fill(board, queue, MapSet.new(), [], fill_character: fill_character)
-    %__MODULE__{canvas | board: board}
+    do_flood_fill(canvas, queue, MapSet.new(), [], fill_character: fill_character)
   end
 
   defp draw_rectangle_with_single_character(
@@ -141,39 +140,43 @@ defmodule Sketch.Canvas do
     draw_on_board(board, cells_to_be_filled, character: character)
   end
 
-  defp do_flood_fill(board, {[], []}, _visited, _result, _opts), do: board
+  defp do_flood_fill(%__MODULE__{} = canvas, {[], []}, _visited, _result, _opts) do
+    canvas
+  end
 
-  defp do_flood_fill(board, queue, visited, result, opts) do
+  defp do_flood_fill(%__MODULE__{} = canvas, queue, visited, result, opts) do
     {board, queue, visited, result} =
-      Enum.reduce(1..:queue.len(queue), {board, queue, visited, result}, fn _n,
-                                                                            {board, queue,
-                                                                             visited, result} ->
-        {{:value, coordinates}, queue} = :queue.out(queue)
+      Enum.reduce(1..:queue.len(queue), {canvas.board, queue, visited, result}, fn
+        _n, {board, queue, visited, result} ->
+          {{:value, coordinates}, queue} = :queue.out(queue)
 
-        if MapSet.member?(visited, coordinates) do
-          {board, queue, visited, result}
-        else
-          board = fill(board, coordinates, opts)
-          [up, right, down, left] = neighbours = neighbours(coordinates)
-          result = [neighbours | result]
+          if MapSet.member?(visited, coordinates) do
+            {board, queue, visited, result}
+          else
+            board = fill(board, coordinates, opts)
 
-          visited = MapSet.put(visited, coordinates)
+            [up, right, down, left] =
+              neighbours = neighbours({canvas.width, canvas.height}, coordinates)
 
-          up = if board[up] == " " && up not in visited, do: up
-          right = if board[right] == " " && right not in visited, do: right
-          down = if board[down] == " " && down not in visited, do: down
-          left = if board[left] == " " && left not in visited, do: left
+            result = [neighbours | result]
 
-          queue = if up, do: :queue.in(up, queue), else: queue
-          queue = if right, do: :queue.in(right, queue), else: queue
-          queue = if down, do: :queue.in(down, queue), else: queue
-          queue = if left, do: :queue.in(left, queue), else: queue
+            visited = MapSet.put(visited, coordinates)
 
-          {board, queue, visited, result}
-        end
+            up = if board[up] == " " && up not in visited, do: up
+            right = if board[right] == " " && right not in visited, do: right
+            down = if board[down] == " " && down not in visited, do: down
+            left = if board[left] == " " && left not in visited, do: left
+
+            queue = if up, do: :queue.in(up, queue), else: queue
+            queue = if right, do: :queue.in(right, queue), else: queue
+            queue = if down, do: :queue.in(down, queue), else: queue
+            queue = if left, do: :queue.in(left, queue), else: queue
+
+            {board, queue, visited, result}
+          end
       end)
 
-    do_flood_fill(board, queue, visited, result, opts)
+    do_flood_fill(%__MODULE__{canvas | board: board}, queue, visited, result, opts)
   end
 
   defp fill(board, {x, y}, opts) do
@@ -181,25 +184,25 @@ defmodule Sketch.Canvas do
     if board[{x, y}] == " ", do: Map.put(board, {x, y}, fill_character), else: board
   end
 
-  defp neighbours({_x, _y} = coordinates) do
-    up = if can_go_up?(coordinates), do: up(coordinates)
-    right = if can_go_right?(coordinates), do: right(coordinates)
-    down = if can_go_down?(coordinates), do: down(coordinates)
-    left = if can_go_left?(coordinates), do: left(coordinates)
+  defp neighbours({_w, _h} = board_dimension, {_x, _y} = coordinates) do
+    up = if can_go_up?(board_dimension, coordinates), do: up(coordinates)
+    right = if can_go_right?(board_dimension, coordinates), do: right(coordinates)
+    down = if can_go_down?(board_dimension, coordinates), do: down(coordinates)
+    left = if can_go_left?(board_dimension, coordinates), do: left(coordinates)
 
     [up, right, down, left]
   end
 
-  defp can_go_up?({_x, y}), do: y > 0
+  defp can_go_up?({_w, _h}, {_x, y}), do: y > 0
   defp up({x, y}), do: {x, y - 1}
 
-  defp can_go_right?({x, _y}), do: x < 25 - 1
+  defp can_go_right?({_w, h}, {x, _y}), do: x < h - 1
   defp right({x, y}), do: {x + 1, y}
 
-  defp can_go_down?({_x, y}), do: y < 25 - 1
+  defp can_go_down?({w, _h}, {_x, y}), do: y < w - 1
   defp down({x, y}), do: {x, y + 1}
 
-  defp can_go_left?({x, _y}), do: x > 0
+  defp can_go_left?({_w, _h}, {x, _y}), do: x > 0
   defp left({x, y}), do: {x - 1, y}
 
   def pretty_print(%__MODULE__{board: board, width: w, height: h}) do

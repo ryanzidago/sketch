@@ -30,7 +30,8 @@ defmodule Sketch.CanvasTest do
     end
 
     test "returns an `{:error, error}` Tuple if the dimensions exceed 24 * 24" do
-      assert {:error, "Dimension exceeds maximum board size (24 * 24"} = Canvas.new({100, 100})
+      assert {:error, "Dimension exceeds maximum board size (100 * 100"} =
+               Canvas.new({1_000, 1_000})
     end
 
     test "returns an `{:error, error}` Tuple when the dimensions are smaller than 2 * 2" do
