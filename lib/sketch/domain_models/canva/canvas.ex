@@ -1,22 +1,51 @@
-defmodule Sketch.Canvases do
-  alias Sketch.Canvases.Canvas
+defmodule Sketch.Canvas do
+  use Ecto.Schema
 
-  defguard is_within_board(x, y) when x in 0..(24 - 1) and y in 0..(24 - 1)
+  alias Sketch.Canvas.EctoBoard
 
-  def new({w, h} \\ {24, 24}) do
-    board = for x <- 0..(h - 1), y <- 0..(w - 1), into: %{}, do: {{x, y}, " "}
-    %Canvas{board: board, width: w, height: h}
+  @primary_key {:id, :binary_id, autogenerate: true}
+
+  schema "canvases" do
+    field :board, EctoBoard
+    field :width, :integer
+    field :height, :integer
+
+    timestamps()
   end
 
-  def draw_rectangle(%Canvas{} = canvas, {x, y}, {w, h}, opts)
-      when is_within_board(x, y)
-      when is_within_board(w, h) do
+  defguard is_within_canvas(canvas, x, y)
+           when x in 0..canvas.width and y in 0..canvas.height
+
+  def new(board_size \\ {24, 24})
+
+  def new({w, h}) when w > 24 or h > 24 do
+    {:error, "Dimension exceeds maximum board size (24 * 24"}
+  end
+
+  def new({w, h}) do
+    board = for x <- 0..(h - 1), y <- 0..(w - 1), into: %{}, do: {{x, y}, " "}
+    %__MODULE__{board: board, width: w, height: h}
+  end
+
+  def draw_rectangle(%__MODULE__{} = canvas, {x, y}, {_w, _h}, _opts)
+      when not is_within_canvas(canvas, x + 1, y + 1) do
+    {:error, "Coordinates are outside of the board's surface"}
+  end
+
+  def draw_rectangle(%__MODULE__{} = canvas, {_x, _y}, {w, h}, _opts)
+      when not is_within_canvas(canvas, w, h) do
+    {:error, "Drawing outside of the board is not allowed"}
+  end
+
+  def draw_rectangle(%__MODULE__{} = canvas, {x, y}, {w, h}, opts)
+      when is_within_canvas(canvas, x, y)
+      when is_within_canvas(canvas, w, h) do
     fill_character = Keyword.get(opts, :fill_character)
     outline_character = Keyword.get(opts, :outline_character)
 
     case {fill_character, outline_character} do
       {nil, nil} ->
-        {:error, "No fill or outline character selected"}
+        {:error, "No fill_character or outline_character provided"}
 
       {fill_character, nil} ->
         draw_rectangle_with_single_character(canvas, {x, y}, {w, h}, character: fill_character)
@@ -31,19 +60,37 @@ defmodule Sketch.Canvases do
     end
   end
 
+  def flood_fill(%__MODULE__{} = _canvas, {_x, _y}, []) do
+    {:error, "No fill_character provided"}
+  end
+
+  def flood_fill(%__MODULE__{} = canvas, {x, y}, _opts)
+      when not is_within_canvas(canvas, x + 1, y + 1) do
+    {:error, "Coordinates {x,y} are outside of the board"}
+  end
+
+  def flood_fill(%__MODULE__{board: board} = canvas, {x, y}, fill_character: fill_character)
+      when is_within_canvas(canvas, x, y) do
+    queue = :queue.new()
+    queue = :queue.in({x, y}, queue)
+
+    board = do_flood_fill(board, queue, MapSet.new(), [], fill_character: fill_character)
+    %__MODULE__{canvas | board: board}
+  end
+
   defp draw_rectangle_with_single_character(
-         %Canvas{board: board} = canvas,
+         %__MODULE__{board: board} = canvas,
          {x, y},
          {w, h},
          character: character
        ) do
     cells_to_be_filled = for y <- y..(h - 1 + y), x <- x..(w - 1 + x), do: {y, x}
     board = draw_on_board(board, cells_to_be_filled, character: character)
-    %Canvas{canvas | board: board}
+    %__MODULE__{canvas | board: board}
   end
 
   defp draw_rectangle_with_outline_character(
-         %Canvas{board: board} = canvas,
+         %__MODULE__{board: board} = canvas,
          {x, y},
          {w, h},
          character: character
@@ -68,7 +115,7 @@ defmodule Sketch.Canvases do
         board -> Map.put(board, {y + n, x}, character)
       end
 
-    %Canvas{canvas | board: board}
+    %__MODULE__{canvas | board: board}
   end
 
   defp draw_on_board(board, [], _opts), do: board
@@ -76,14 +123,6 @@ defmodule Sketch.Canvases do
   defp draw_on_board(board, [{x, y} | cells_to_be_filled], character: character) do
     board = Map.put(board, {x, y}, character)
     draw_on_board(board, cells_to_be_filled, character: character)
-  end
-
-  def flood_fill(%Canvas{board: board} = canvas, {x, y}, opts) do
-    queue = :queue.new()
-    queue = :queue.in({x, y}, queue)
-
-    board = do_flood_fill(board, queue, MapSet.new(), [], opts)
-    %Canvas{canvas | board: board}
   end
 
   defp do_flood_fill(board, {[], []}, _visited, _result, _opts), do: board
@@ -147,7 +186,7 @@ defmodule Sketch.Canvases do
   defp can_go_left?({x, _y}), do: x > 0
   defp left({x, y}), do: {x - 1, y}
 
-  def pretty_print(%Canvas{board: board, width: w, height: h}) do
+  def pretty_print(%__MODULE__{board: board, width: w, height: h}) do
     pretty_canvas =
       for x <- 0..(h - 1), into: "" do
         row =
@@ -161,7 +200,7 @@ defmodule Sketch.Canvases do
     IO.puts(pretty_canvas)
   end
 
-  def pretty(%Canvas{board: board, width: w, height: h}) do
+  def pretty(%__MODULE__{board: board, width: w, height: h}) do
     for x <- 0..(h - 1), into: "" do
       row =
         for y <- 0..(w - 1), into: "" do

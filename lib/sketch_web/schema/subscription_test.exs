@@ -1,11 +1,10 @@
 defmodule SketchWeb.Schema.SubscriptionTest do
   use SketchWeb.SubscriptionCase
 
-  alias Sketch.Canvases
-  alias Canvases.Canvas
+  alias Sketch.{Canvas, CanvasRepo}
 
   setup do
-    canvas = Canvas.insert!(Canvases.new())
+    canvas = CanvasRepo.insert!(Canvas.new())
 
     {
       :ok,
@@ -38,7 +37,7 @@ defmodule SketchWeb.Schema.SubscriptionTest do
                  subscriptionId: ^subscription_id
                } = push
 
-      assert Canvas.get!(canvas_id)
+      assert CanvasRepo.get!(canvas_id)
     end
   end
 

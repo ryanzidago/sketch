@@ -1,7 +1,7 @@
-defmodule Sketch.CanvasesTest do
+defmodule Sketch.CanvasTest do
   use ExUnit.Case
 
-  alias Sketch.Canvases
+  alias Sketch.Canvas
 
   setup _ do
     {
@@ -12,7 +12,7 @@ defmodule Sketch.CanvasesTest do
 
   describe "new/{0, 1}" do
     test "creates a new empty 24 * 24 canvas" do
-      canvas = Canvases.new()
+      canvas = Canvas.new()
 
       Enum.each(all_cells(), fn {x, y} ->
         assert Map.get(canvas.board, {x, y}) == " "
@@ -20,7 +20,7 @@ defmodule Sketch.CanvasesTest do
     end
 
     test "creates a new empty w * h canvas" do
-      canvas = Canvases.new({21, 8})
+      canvas = Canvas.new({21, 8})
 
       Enum.each(all_cells({21, 8}), fn {x, y} ->
         assert Map.get(canvas.board, {x, y}) == " "
@@ -30,9 +30,9 @@ defmodule Sketch.CanvasesTest do
 
   test "test fixutre 1" do
     canvas =
-      Canvases.new()
-      |> Canvases.draw_rectangle({3, 2}, {5, 3}, outline_character: "@", fill_character: "X")
-      |> Canvases.draw_rectangle({10, 3}, {14, 6}, outline_character: "X", fill_character: "O")
+      Canvas.new()
+      |> Canvas.draw_rectangle({3, 2}, {5, 3}, outline_character: "@", fill_character: "X")
+      |> Canvas.draw_rectangle({10, 3}, {14, 6}, outline_character: "X", fill_character: "O")
 
     expected = """
     @@@@@
@@ -44,15 +44,15 @@ defmodule Sketch.CanvasesTest do
            XXXXXXXXXXXXXX
     """
 
-    assert String.split(Canvases.pretty(canvas)) == String.split(expected)
+    assert String.split(Canvas.pretty(canvas)) == String.split(expected)
   end
 
   test "test fixture 2" do
     canvas =
-      Canvases.new()
-      |> Canvases.draw_rectangle({15, 0}, {7, 6}, fill_character: ".")
-      |> Canvases.draw_rectangle({0, 3}, {8, 4}, outline_character: "O")
-      |> Canvases.draw_rectangle({5, 5}, {5, 3}, outline_character: "X", fill_character: "X")
+      Canvas.new()
+      |> Canvas.draw_rectangle({15, 0}, {7, 6}, fill_character: ".")
+      |> Canvas.draw_rectangle({0, 3}, {8, 4}, outline_character: "O")
+      |> Canvas.draw_rectangle({5, 5}, {5, 3}, outline_character: "X", fill_character: "X")
 
     expected = """
                   .......
@@ -65,16 +65,16 @@ defmodule Sketch.CanvasesTest do
          XXXXX
     """
 
-    assert String.split(Canvases.pretty(canvas)) == String.split(expected)
+    assert String.split(Canvas.pretty(canvas)) == String.split(expected)
   end
 
   test "test fixture 3" do
     canvas =
-      Canvases.new({21, 8})
-      |> Canvases.draw_rectangle({14, 0}, {7, 6}, fill_character: ".")
-      |> Canvases.draw_rectangle({0, 3}, {8, 4}, outline_character: "O")
-      |> Canvases.draw_rectangle({5, 5}, {5, 3}, outline_character: "X", fill_character: "X")
-      |> Canvases.flood_fill({0, 0}, fill_character: "-")
+      Canvas.new({21, 8})
+      |> Canvas.draw_rectangle({14, 0}, {7, 6}, fill_character: ".")
+      |> Canvas.draw_rectangle({0, 3}, {8, 4}, outline_character: "O")
+      |> Canvas.draw_rectangle({5, 5}, {5, 3}, outline_character: "X", fill_character: "X")
+      |> Canvas.flood_fill({0, 0}, fill_character: "-")
 
     expected = """
     --------------.......
@@ -87,7 +87,7 @@ defmodule Sketch.CanvasesTest do
          XXXXX-----------
     """
 
-    assert String.split(Canvases.pretty(canvas)) == String.split(expected)
+    assert String.split(Canvas.pretty(canvas)) == String.split(expected)
   end
 
   defp all_cells({w, h} \\ {24, 24}) do

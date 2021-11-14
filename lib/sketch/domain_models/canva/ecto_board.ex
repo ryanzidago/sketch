@@ -1,4 +1,4 @@
-defmodule Sketch.Canvases.Canvas.EctoBoard do
+defmodule Sketch.Canvas.EctoBoard do
   use Ecto.Type
 
   def type, do: :map

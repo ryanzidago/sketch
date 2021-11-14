@@ -1,12 +1,11 @@
 defmodule SketchWeb.SchemaTest do
   use SketchWeb.ConnCase
 
-  alias Sketch.Canvases
-  alias Canvases.Canvas
+  alias Sketch.{Canvas, CanvasRepo}
 
   setup do
-    Canvas.insert!(Canvases.new())
-    canvas = Canvas.insert!(Canvases.new())
+    _canvas = CanvasRepo.insert!(Canvas.new())
+    canvas = CanvasRepo.insert!(Canvas.new())
 
     {:ok, canvas: canvas}
   end
@@ -52,7 +51,7 @@ defmodule SketchWeb.SchemaTest do
       response = json_response(conn, 200)
       canvas = response["data"]["createCanvas"]
 
-      assert canvas = Canvas.get!(canvas["id"])
+      assert canvas = CanvasRepo.get!(canvas["id"])
       assert canvas.board
       assert canvas.width == 24
       assert canvas.height == 24
@@ -66,7 +65,7 @@ defmodule SketchWeb.SchemaTest do
       response = json_response(conn, 200)
       canvas = response["data"]["createCanvas"]
 
-      assert canvas = Canvas.get!(canvas["id"])
+      assert canvas = CanvasRepo.get!(canvas["id"])
       assert canvas.board
       assert canvas.width == 21
       assert canvas.height == 8
@@ -91,7 +90,7 @@ defmodule SketchWeb.SchemaTest do
       response = json_response(conn, 200)
       canvas = response["data"]["drawRectangle"]
 
-      assert canvas = Canvas.get!(canvas["id"])
+      assert canvas = CanvasRepo.get!(canvas["id"])
 
       expected = """
       @@@@@@
@@ -100,7 +99,7 @@ defmodule SketchWeb.SchemaTest do
       @@@@@@
       """
 
-      assert String.split(expected) == String.split(Canvases.pretty(canvas))
+      assert String.split(expected) == String.split(Canvas.pretty(canvas))
     end
   end
 
@@ -120,9 +119,9 @@ defmodule SketchWeb.SchemaTest do
 
       canvas = response["data"]["floodFill"]
 
-      assert canvas = Canvas.get!(canvas["id"])
+      assert canvas = CanvasRepo.get!(canvas["id"])
 
-      assert Canvases.pretty(canvas) == """
+      assert Canvas.pretty(canvas) == """
              ------------------------
              ------------------------
              ------------------------

@@ -1,9 +1,8 @@
-defmodule Sketch.Canvases.Canvas.EctoBoardTest do
+defmodule Sketch.Canvas.EctoBoardTest do
   use Sketch.DataCase
 
-  alias Sketch.Canvases
-  alias Sketch.Canvases.Canvas
-  alias Sketch.Canvases.Canvas.EctoBoard
+  alias Sketch.Canvas
+  alias Sketch.Canvas.EctoBoard
 
   describe "type/0" do
     test "returns :map" do
@@ -13,12 +12,12 @@ defmodule Sketch.Canvases.Canvas.EctoBoardTest do
 
   describe "cast/1" do
     test "{:ok, board}` without modifying the board, when the board param is a map (but not a struct)" do
-      assert %Canvas{board: board} = Canvases.new()
+      assert %Canvas{board: board} = Canvas.new()
       assert {:ok, board} == EctoBoard.cast(board)
     end
 
     test "returns `:error` in other cases" do
-      assert canvas = Canvases.new()
+      assert canvas = Canvas.new()
       assert :error == EctoBoard.cast(canvas)
     end
   end
