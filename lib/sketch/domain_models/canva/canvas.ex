@@ -24,8 +24,8 @@ defmodule Sketch.Canvas do
     {:error, "Dimension exceeds maximum board size (24 * 24"}
   end
 
-  def new({w, h}) when not is_positive(w, h) do
-    {:error, "Width and height must be positive"}
+  def new({w, h}) when w < 2 or h < 2 do
+    {:error, "Dimensions must be at least 2 * 2"}
   end
 
   def new({w, h}) do
