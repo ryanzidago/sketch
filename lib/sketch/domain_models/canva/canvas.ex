@@ -34,7 +34,7 @@ defmodule Sketch.Canvas do
   end
 
   def draw_rectangle(%__MODULE__{} = canvas, {x, y}, {_w, _h}, _opts)
-      when not is_within_canvas(canvas, x + 1, y + 1) do
+      when not is_within_canvas(canvas, x, y) do
     {:error, "Coordinates outside of the board's surface"}
   end
 

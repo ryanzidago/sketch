@@ -43,11 +43,9 @@ defmodule Sketch.CanvasTest do
          %{canvas: canvas} do
       assert result = Canvas.draw_rectangle(canvas, {100, 100}, {1, 1}, fill_character: "X")
       assert {:error, "Coordinates outside of the board's surface"} = result
-    end
 
-    test "returns an `{:error, error}` Tuple if the coordinates are negative", %{canvas: canvas} do
-      assert result = Canvas.draw_rectangle(canvas, {-1, -1}, {1, 1}, fill_character: "X")
-      assert {:error, "Coordinates are negative"} = result
+      assert result = Canvas.draw_rectangle(canvas, {-100, -100}, {1, 1}, fill_character: "X")
+      assert {:error, "Coordinates outside of the board's surface"} = result
     end
 
     test "returns an `{:error, error}` Tuple if the requested rectangle would be outside of the board",

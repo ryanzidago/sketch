@@ -9,10 +9,23 @@ defmodule Sketch.CanvasRepo do
 
   def get!(id), do: Repo.get!(Canvas, id)
 
+  def get(id) do
+    case Ecto.UUID.dump(id) do
+      :error -> {:error, "ID must be a UUID"}
+      {:ok, _id} -> Repo.get(Canvas, id)
+    end
+  end
+
   def insert!(canvas) do
     canvas
     |> changeset()
     |> Repo.insert!()
+  end
+
+  def insert(canvas) do
+    canvas
+    |> changeset()
+    |> Repo.insert()
   end
 
   def update(canvas) do
