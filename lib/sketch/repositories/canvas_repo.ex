@@ -7,8 +7,6 @@ defmodule Sketch.CanvasRepo do
 
   def all, do: Repo.all(Canvas)
 
-  def get!(id), do: Repo.get!(Canvas, id)
-
   def get(id) do
     case Ecto.UUID.dump(id) do
       :error -> {:error, "ID must be a UUID"}
@@ -35,7 +33,7 @@ defmodule Sketch.CanvasRepo do
     |> Repo.update()
   end
 
-  def changeset(canvas, attrs \\ %{}) do
+  defp changeset(canvas, attrs \\ %{}) do
     canvas
     |> cast(attrs, @permitted_params)
     |> validate_required(@permitted_params)

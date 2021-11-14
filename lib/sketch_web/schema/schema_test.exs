@@ -51,7 +51,7 @@ defmodule SketchWeb.SchemaTest do
       response = json_response(conn, 200)
       canvas = response["data"]["createCanvas"]
 
-      assert canvas = CanvasRepo.get!(canvas["id"])
+      assert canvas = CanvasRepo.get(canvas["id"])
       assert canvas.board
       assert canvas.width == 24
       assert canvas.height == 24
@@ -65,7 +65,7 @@ defmodule SketchWeb.SchemaTest do
       response = json_response(conn, 200)
       canvas = response["data"]["createCanvas"]
 
-      assert canvas = CanvasRepo.get!(canvas["id"])
+      assert canvas = CanvasRepo.get(canvas["id"])
       assert canvas.board
       assert canvas.width == 21
       assert canvas.height == 8
@@ -90,7 +90,7 @@ defmodule SketchWeb.SchemaTest do
       response = json_response(conn, 200)
       canvas = response["data"]["drawRectangle"]
 
-      assert canvas = CanvasRepo.get!(canvas["id"])
+      assert canvas = CanvasRepo.get(canvas["id"])
 
       expected = """
       @@@@@@
@@ -119,7 +119,7 @@ defmodule SketchWeb.SchemaTest do
 
       canvas = response["data"]["floodFill"]
 
-      assert canvas = CanvasRepo.get!(canvas["id"])
+      assert canvas = CanvasRepo.get(canvas["id"])
 
       assert Canvas.pretty(canvas) == """
              ------------------------

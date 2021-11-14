@@ -16,7 +16,7 @@ defmodule SketchWeb.CanvasResolver do
 
   def create_canvas(_parents, %{width: width, height: height}, _resolution) do
     with %Canvas{} = canvas <- Canvas.new({width, height}),
-         %Canvas{} = canvas <- CanvasRepo.insert(canvas) do
+         {:ok, canvas} <- CanvasRepo.insert(canvas) do
       {:ok, canvas}
     else
       error -> error
@@ -25,7 +25,7 @@ defmodule SketchWeb.CanvasResolver do
 
   def create_canvas(_parents, _args, _resolution) do
     with %Canvas{} = canvas <- Canvas.new(),
-         %Canvas{} = canvas <- CanvasRepo.insert(canvas) do
+         {:ok, canvas} <- CanvasRepo.insert(canvas) do
       {:ok, canvas}
     else
       error -> error
@@ -39,7 +39,7 @@ defmodule SketchWeb.CanvasResolver do
 
     with %Canvas{} = canvas <- CanvasRepo.get(id),
          %Canvas{} = canvas <- Canvas.draw_rectangle(canvas, {x, y}, {w, h}, opts),
-         %Canvas{} = canvas <- CanvasRepo.update(canvas) do
+         {:ok, canvas} <- CanvasRepo.update(canvas) do
       {:ok, canvas}
     else
       error -> error
@@ -49,7 +49,7 @@ defmodule SketchWeb.CanvasResolver do
   def flood_fill(_parent, %{id: id, x: x, y: y, fill_character: fill_character}, _resolution) do
     with %Canvas{} = canvas <- CanvasRepo.get(id),
          %Canvas{} = canvas <- Canvas.flood_fill(canvas, {x, y}, fill_character: fill_character),
-         %Canvas{} = canvas <- CanvasRepo.update(canvas) do
+         {:ok, canvas} <- CanvasRepo.update(canvas) do
       {:ok, canvas}
     else
       error -> error

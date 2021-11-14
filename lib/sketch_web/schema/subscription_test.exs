@@ -37,7 +37,7 @@ defmodule SketchWeb.Schema.SubscriptionTest do
                  subscriptionId: ^subscription_id
                } = push
 
-      assert CanvasRepo.get!(canvas_id)
+      assert CanvasRepo.get(canvas_id)
     end
   end
 
