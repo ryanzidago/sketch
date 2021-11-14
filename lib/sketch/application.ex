@@ -15,9 +15,10 @@ defmodule Sketch.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Sketch.PubSub},
       # Start the Endpoint (http/https)
-      SketchWeb.Endpoint
+      SketchWeb.Endpoint,
       # Start a worker by calling: Sketch.Worker.start_link(arg)
       # {Sketch.Worker, arg}
+      {Absinthe.Subscription, SketchWeb.Endpoint}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,6 +1,7 @@
 defmodule SketchWeb.CanvasResolver do
   alias Sketch.Canvases
-  alias Sketch.Canvases.Canvas
+  alias Canvases.Canvas
+  alias Canvas.EctoBoard
 
   def all(_parent, _args, _resolution) do
     {:ok, Canvas.all()}
@@ -38,5 +39,10 @@ defmodule SketchWeb.CanvasResolver do
     canvas = Canvas.update!(canvas, changes)
 
     {:ok, canvas}
+  end
+
+  def board(%{board: board}, _, _) do
+    {:ok, dumped_board} = EctoBoard.dump(board)
+    Jason.encode(dumped_board)
   end
 end

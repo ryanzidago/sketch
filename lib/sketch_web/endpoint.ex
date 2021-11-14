@@ -1,5 +1,6 @@
 defmodule SketchWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :sketch
+  use Absinthe.Phoenix.Endpoint
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
@@ -11,7 +12,7 @@ defmodule SketchWeb.Endpoint do
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
-
+  socket "/user-socket", SketchWeb.UserSocket
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest

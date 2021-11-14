@@ -23,7 +23,11 @@ defmodule SketchWeb.Router do
   scope "/api" do
     pipe_through :api
 
-    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: SketchWeb.Schema
+    forward "/graphiql", Absinthe.Plug.GraphiQL,
+      schema: SketchWeb.Schema,
+      socket: SketchWeb.UserSocket,
+      interface: :advanced
+
     forward "/", Absinthe.Plug, schema: SketchWeb.Schema
   end
 

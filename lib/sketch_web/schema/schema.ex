@@ -1,12 +1,11 @@
 defmodule SketchWeb.Schema do
   use Absinthe.Schema
 
-  alias Sketch.Canvases.Canvas.EctoBoard
   alias SketchWeb.CanvasResolver
 
   object :canvas do
     field :id, :id
-    field :board, :string, resolve: &resolve_board/3
+    field :board, :string, resolve: &CanvasResolver.board/3
     field :width, :integer
     field :height, :integer
     field :inserted_at, :string
@@ -60,8 +59,27 @@ defmodule SketchWeb.Schema do
     end
   end
 
-  defp resolve_board(%{board: board}, _, _) do
-    {:ok, dumped_board} = EctoBoard.dump(board)
-    Jason.encode(dumped_board)
+  subscription do
+    field :on_canvas_created, :canvas do
+      config(fn _args, _context ->
+        {:ok, topic: "*"}
+      end)
+
+      trigger(:create_canvas, topic: fn _args -> "*" end)
+    end
+
+    field :on_canvas_updated, :canvas do
+      arg(:id, non_null(:id))
+
+      config(fn args, _context ->
+        {:ok, topic: "canvas:#{args.id}"}
+      end)
+
+      trigger([:draw_rectangle, :flood_fill],
+        topic: fn
+          args -> "canvas:#{args.id}"
+        end
+      )
+    end
   end
 end
