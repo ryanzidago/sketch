@@ -88,6 +88,7 @@ defmodule Sketch.Canvas do
   @doc """
   Flood fills cells starting from position `x`, `y`. Stops as soon as a cell is already filled with a non empty character.
   `flood_fill/3` uses breadth-first search with the built-in Erlang `:queue` module to "circle" around the coordinates.
+
   """
   def flood_fill(%__MODULE__{} = _canvas, {_x, _y}, []) do
     {:error, "No fill_character provided"}
@@ -105,10 +106,7 @@ defmodule Sketch.Canvas do
 
   def flood_fill(%__MODULE__{} = canvas, {x, y}, fill_character: fill_character)
       when is_within_canvas(canvas, x, y) do
-    queue = :queue.new()
-    queue = :queue.in({x, y}, queue)
-
-    do_flood_fill(canvas, queue, MapSet.new(), fill_character: fill_character)
+    do_flood_fill(canvas, [{x, y}], MapSet.new(), fill_character: fill_character)
   end
 
   @doc """
@@ -189,18 +187,16 @@ defmodule Sketch.Canvas do
     draw_on_board(board, cells_to_be_filled, character: character)
   end
 
-  defp do_flood_fill(%__MODULE__{} = canvas, {[], []}, _visited, _opts) do
+  defp do_flood_fill(%__MODULE__{} = canvas, [] = _stack, _visited, _opts) do
     canvas
   end
 
-  defp do_flood_fill(%__MODULE__{} = canvas, queue, visited, opts) do
-    {board, queue, visited} =
-      Enum.reduce(1..:queue.len(queue), {canvas.board, queue, visited}, fn
-        _n, {board, queue, visited} ->
-          {{:value, coordinates}, queue} = :queue.out(queue)
-
+  defp do_flood_fill(%__MODULE__{} = canvas, stack, visited, opts) do
+    {board, stack, visited} =
+      Enum.reduce(stack, {canvas.board, stack, visited}, fn
+        _, {board, [coordinates | stack], visited} ->
           if MapSet.member?(visited, coordinates) do
-            {board, queue, visited}
+            {board, stack, visited}
           else
             board = fill(board, coordinates, opts)
 
@@ -208,21 +204,21 @@ defmodule Sketch.Canvas do
 
             visited = MapSet.put(visited, coordinates)
 
-            up = if board[up] == " " && up not in visited, do: up
-            right = if board[right] == " " && right not in visited, do: right
-            down = if board[down] == " " && down not in visited, do: down
-            left = if board[left] == " " && left not in visited, do: left
+            up = if board[up] == " ", do: up
+            right = if board[right] == " ", do: right
+            down = if board[down] == " ", do: down
+            left = if board[left] == " ", do: left
 
-            queue = if up, do: :queue.in(up, queue), else: queue
-            queue = if right, do: :queue.in(right, queue), else: queue
-            queue = if down, do: :queue.in(down, queue), else: queue
-            queue = if left, do: :queue.in(left, queue), else: queue
+            stack = if up, do: [up | stack], else: stack
+            stack = if right, do: [right | stack], else: stack
+            stack = if down, do: [down | stack], else: stack
+            stack = if left, do: [left | stack], else: stack
 
-            {board, queue, visited}
+            {board, stack, visited}
           end
       end)
 
-    do_flood_fill(%__MODULE__{canvas | board: board}, queue, visited, opts)
+    do_flood_fill(%__MODULE__{canvas | board: board}, stack, visited, opts)
   end
 
   defp fill(board, {x, y}, opts) do
