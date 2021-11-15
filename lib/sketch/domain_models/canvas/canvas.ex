@@ -204,10 +204,10 @@ defmodule Sketch.Canvas do
 
             visited = MapSet.put(visited, coordinates)
 
-            up = if board[up] == " ", do: up
-            right = if board[right] == " ", do: right
-            down = if board[down] == " ", do: down
-            left = if board[left] == " ", do: left
+            up = if board[up] == " " && up not in visited, do: up
+            right = if board[right] == " " && right not in visited, do: right
+            down = if board[down] == " " && down not in visited, do: down
+            left = if board[left] == " " && left not in visited, do: left
 
             stack = if up, do: [up | stack], else: stack
             stack = if right, do: [right | stack], else: stack
