@@ -1,4 +1,4 @@
-defmodule SketchWeb.CanvasQueries do
+defmodule SketchWeb.Graphql.CanvasQueries do
   def on_canvas_created do
     """
     subscription {

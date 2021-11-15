@@ -1,7 +1,7 @@
-defmodule SketchWeb.Schema do
+defmodule SketchWeb.Graphql.Schema do
   use Absinthe.Schema
 
-  alias SketchWeb.CanvasResolver
+  alias SketchWeb.Graphql.CanvasResolver
 
   object :canvas do
     field :id, :id

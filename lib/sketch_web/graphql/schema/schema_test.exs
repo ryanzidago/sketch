@@ -1,4 +1,4 @@
-defmodule SketchWeb.SchemaTest do
+defmodule SketchWeb.Graphql.SchemaTest do
   use SketchWeb.ConnCase
 
   alias Sketch.{Canvas, CanvasRepo}

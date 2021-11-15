@@ -1,4 +1,4 @@
-defmodule SketchWeb.CanvasResolver do
+defmodule SketchWeb.Graphql.CanvasResolver do
   alias Sketch.{Canvas, CanvasRepo}
   alias Canvas.EctoBoard
 

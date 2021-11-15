@@ -1,6 +1,6 @@
 defmodule SketchWeb.UserSocket do
   use Phoenix.Socket
-  use Absinthe.Phoenix.Socket, schema: SketchWeb.Schema
+  use Absinthe.Phoenix.Socket, schema: SketchWeb.Graphql.Schema
 
   def connect(_params, socket) do
     {:ok, socket}

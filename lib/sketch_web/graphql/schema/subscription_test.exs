@@ -1,4 +1,4 @@
-defmodule SketchWeb.Schema.SubscriptionTest do
+defmodule SketchWeb.Graphql.Schema.SubscriptionTest do
   use SketchWeb.SubscriptionCase
 
   alias Sketch.{Canvas, CanvasRepo}

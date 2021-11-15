@@ -1,7 +1,8 @@
 defmodule SketchWeb.CanvasLive do
   use SketchWeb, :live_view
 
-  alias SketchWeb.{Endpoint, Schema, CanvasView, CanvasQueries}
+  alias SketchWeb.{Endpoint, CanvasView, Graphql}
+  alias Graphql.{Schema, CanvasQueries}
   alias Sketch.{Canvas, CanvasRepo}
   alias Canvas.EctoBoard
 

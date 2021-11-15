@@ -8,7 +8,7 @@ defmodule SketchWeb.SubscriptionCase do
   using do
     quote do
       use SketchWeb.ChannelCase
-      use Absinthe.Phoenix.SubscriptionTest, schema: SketchWeb.Schema
+      use Absinthe.Phoenix.SubscriptionTest, schema: SketchWeb.Graphql.Schema
 
       setup do
         {:ok, socket} = Phoenix.ChannelTest.connect(SketchWeb.UserSocket, %{})
