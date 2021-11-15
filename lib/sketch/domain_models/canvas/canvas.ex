@@ -1,4 +1,7 @@
 defmodule Sketch.Canvas do
+  @moduledoc """
+  `Sketch.Canvas` is used to create new canvases and draw on them.
+  """
   use Ecto.Schema
 
   alias Sketch.Canvas.EctoBoard
@@ -13,12 +16,20 @@ defmodule Sketch.Canvas do
     timestamps()
   end
 
+  @doc """
+  Returns `true` if the given coordinates `x`, `y` are within the canvas.
+  """
   defguard is_within_canvas(canvas, x, y)
            when x in 0..canvas.width and y in 0..canvas.height
 
-  defguard is_positive(x, y) when x >= 0 and y >= 0
+  @doc """
+  Returns `true` if the given `character` is a 1-byte bitstring.
+  """
   defguard is_ascii(character) when is_bitstring(character) and byte_size(character) == 1
 
+  @doc """
+  Creates a new canvas.
+  """
   def new(board_size \\ {24, 24})
 
   def new({w, h}) when w > 100 or h > 100 do
@@ -39,6 +50,9 @@ defmodule Sketch.Canvas do
     {:error, "Coordinates outside of the board's surface"}
   end
 
+  @doc """
+  Draws a rectangle on the given canvas, at position `x`, `y` whose width is `w` and height is `h`, with either a `fill_character` and/or an `outline_character`.
+  """
   def draw_rectangle(%__MODULE__{} = canvas, {x, y}, {w, h}, _opts)
       when not is_within_canvas(canvas, x + w, y + h) do
     {:error, "Drawing outside of the board is not allowed"}
@@ -71,6 +85,10 @@ defmodule Sketch.Canvas do
     end
   end
 
+  @doc """
+  Flood fills cells starting from position `x`, `y`. Stops as soon as a cell is already filled with a non empty character.
+  `flood_fill/3` uses breadth-first search with the built-in Erlang `:queue` module to "circle" around the coordinates.
+  """
   def flood_fill(%__MODULE__{} = _canvas, {_x, _y}, []) do
     {:error, "No fill_character provided"}
   end
@@ -91,6 +109,37 @@ defmodule Sketch.Canvas do
     queue = :queue.in({x, y}, queue)
 
     do_flood_fill(canvas, queue, MapSet.new(), fill_character: fill_character)
+  end
+
+  @doc """
+  Pretty prints the canvas' board.
+  """
+  def pretty_print(%__MODULE__{board: board, width: w, height: h}) do
+    pretty_canvas =
+      for x <- 0..(h - 1), into: "" do
+        row =
+          for y <- 0..(w - 1), into: "" do
+            "#{board[{x, y}]}"
+          end
+
+        row <> "\n"
+      end
+
+    IO.puts(pretty_canvas)
+  end
+
+  @doc """
+  Returns a pretty string representation of the canvas' board.
+  """
+  def pretty(%__MODULE__{board: board, width: w, height: h}) do
+    for x <- 0..(h - 1), into: "" do
+      row =
+        for y <- 0..(w - 1), into: "" do
+          "#{board[{x, y}]}"
+        end
+
+      row <> "\n"
+    end
   end
 
   defp draw_rectangle_with_single_character(
@@ -201,29 +250,4 @@ defmodule Sketch.Canvas do
 
   defp can_go_left?({_w, _h}, {x, _y}), do: x > 0
   defp left({x, y}), do: {x - 1, y}
-
-  def pretty_print(%__MODULE__{board: board, width: w, height: h}) do
-    pretty_canvas =
-      for x <- 0..(h - 1), into: "" do
-        row =
-          for y <- 0..(w - 1), into: "" do
-            "#{board[{x, y}]}"
-          end
-
-        row <> "\n"
-      end
-
-    IO.puts(pretty_canvas)
-  end
-
-  def pretty(%__MODULE__{board: board, width: w, height: h}) do
-    for x <- 0..(h - 1), into: "" do
-      row =
-        for y <- 0..(w - 1), into: "" do
-          "#{board[{x, y}]}"
-        end
-
-      row <> "\n"
-    end
-  end
 end
