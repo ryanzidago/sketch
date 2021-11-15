@@ -1,0 +1,96 @@
+{
+  "key": "graphiql",
+  "lastId": 3,
+  "tabIds": [
+    "tab1",
+    "tab2",
+    "tab3"
+  ],
+  "closedTabs": [],
+  "defaultUrl": "http://localhost:4000/api/graphiql",
+  "defaultWebsocketUrl": "ws://localhost:4000/socket",
+  "defaultQuery": "",
+  "defaultVariables": "",
+  "defaultProxy": false,
+  "defaultHeaders": [],
+  "usedUrls": [
+    "http://localhost:4000/api/graphiql"
+  ],
+  "recentHeaders": [],
+  "maxTabHistory": 20,
+  "maxUrlHistory": 20,
+  "maxHistory": 20,
+  "savedQueries": [],
+  "activeId": "tab3",
+  "tabs": [
+    {
+      "id": "tab1",
+      "name": "Test Fixture 1",
+      "url": "http://localhost:4000/api/graphiql",
+      "websocketUrl": "ws://localhost:4000/socket",
+      "proxy": false,
+      "headers": [],
+      "collapsed": false,
+      "maxHistory": 20,
+      "history": [
+        {
+          "query": "mutation DrawRectangle1 {\n  drawRectangle(id:\"57435f41-e9ef-4d4f-9c29-a242408323f3\", x:3, y:2, width:5, height:3, outlineCharacter:\"@\", fillCharacter:\"X\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle2 {\n  drawRectangle(id:\"57435f41-e9ef-4d4f-9c29-a242408323f3\", x:10, y:3, width:14, height:6, outlineCharacter:\"X\", fillCharacter:\"O\") {\n    id \n    board\n  }\n}\n\n",
+          "variables": null
+        }
+      ],
+      "graphiql:query": "mutation DrawRectangle1 {\n  drawRectangle(id:\"57435f41-e9ef-4d4f-9c29-a242408323f3\", x:3, y:2, width:5, height:3, outlineCharacter:\"@\", fillCharacter:\"X\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle2 {\n  drawRectangle(id:\"57435f41-e9ef-4d4f-9c29-a242408323f3\", x:10, y:3, width:14, height:6, outlineCharacter:\"X\", fillCharacter:\"O\") {\n    id \n    board\n  }\n}\n\n",
+      "graphiql:variables": "",
+      "graphiql:queries": "{\"queries\":[{\"query\":\"mutation DrawRectangle1 {\\n  drawRectangle(id:\\\"57435f41-e9ef-4d4f-9c29-a242408323f3\\\", x:3, y:2, width:5, height:3, outlineCharacter:\\\"@\\\", fillCharacter:\\\"X\\\") {\\n    id \\n    board\\n  }\\n}\\n\\nmutation DrawRectangle2 {\\n  drawRectangle(id:\\\"57435f41-e9ef-4d4f-9c29-a242408323f3\\\", x:10, y:3, width:14, height:6, outlineCharacter:\\\"X\\\", fillCharacter:\\\"O\\\") {\\n    id \\n    board\\n  }\\n}\\n\\n\",\"operationName\":\"DrawRectangle1\"}]}",
+      "graphiql:operationName": "DrawRectangle2",
+      "graphiql:editorFlex": 6.8347107438016526,
+      "graphiql:variableEditorHeight": 200,
+      "graphiql:docExplorerWidth": 350
+    },
+    {
+      "id": "tab2",
+      "name": "Test Fixture 2",
+      "url": "http://localhost:4000/api/graphiql",
+      "websocketUrl": "ws://localhost:4000/socket",
+      "proxy": false,
+      "headers": [],
+      "collapsed": false,
+      "maxHistory": 20,
+      "history": [
+        {
+          "query": "mutation DrawRectangle1 {\n  drawRectangle(id:\"e0cd2d97-647e-4bf1-b8e2-6c5a3dfbc36b\", x:15, y:0, width:7, height:6, fillCharacter:\".\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle2 {\n  drawRectangle(id:\"e0cd2d97-647e-4bf1-b8e2-6c5a3dfbc36b\", x:0, y:3, width:8, height:4, outlineCharacter:\"O\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle3 {\n  drawRectangle(id:\"e0cd2d97-647e-4bf1-b8e2-6c5a3dfbc36b\", x:5, y:5, width:5, height:3, outlineCharacter:\"X\", fillCharacter:\"X\") {\n    id \n    board\n  }\n}\n",
+          "variables": null
+        }
+      ],
+      "graphiql:query": "mutation DrawRectangle1 {\n  drawRectangle(id:\"e0cd2d97-647e-4bf1-b8e2-6c5a3dfbc36b\", x:15, y:0, width:7, height:6, fillCharacter:\".\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle2 {\n  drawRectangle(id:\"e0cd2d97-647e-4bf1-b8e2-6c5a3dfbc36b\", x:0, y:3, width:8, height:4, outlineCharacter:\"O\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle3 {\n  drawRectangle(id:\"e0cd2d97-647e-4bf1-b8e2-6c5a3dfbc36b\", x:5, y:5, width:5, height:3, outlineCharacter:\"X\", fillCharacter:\"X\") {\n    id \n    board\n  }\n}\n",
+      "graphiql:variables": "",
+      "graphiql:queries": "{\"queries\":[{\"query\":\"mutation DrawRectangle1 {\\n  drawRectangle(id:\\\"e0cd2d97-647e-4bf1-b8e2-6c5a3dfbc36b\\\", x:15, y:0, width:7, height:6, fillCharacter:\\\".\\\") {\\n    id \\n    board\\n  }\\n}\\n\\nmutation DrawRectangle2 {\\n  drawRectangle(id:\\\"e0cd2d97-647e-4bf1-b8e2-6c5a3dfbc36b\\\", x:0, y:3, width:8, height:4, outlineCharacter:\\\"O\\\") {\\n    id \\n    board\\n  }\\n}\\n\\nmutation DrawRectangle3 {\\n  drawRectangle(id:\\\"e0cd2d97-647e-4bf1-b8e2-6c5a3dfbc36b\\\", x:5, y:5, width:5, height:3, outlineCharacter:\\\"X\\\", fillCharacter:\\\"X\\\") {\\n    id \\n    board\\n  }\\n}\\n\",\"variables\":\"\",\"operationName\":\"DrawRectangle1\"}]}",
+      "graphiql:operationName": "DrawRectangle3",
+      "graphiql:editorFlex": 947,
+      "graphiql:variableEditorHeight": 200,
+      "graphiql:docExplorerWidth": 350
+    },
+    {
+      "id": "tab3",
+      "name": "Test Fixture 3",
+      "url": "http://localhost:4000/api/graphiql",
+      "websocketUrl": "ws://localhost:4000/socket",
+      "proxy": false,
+      "headers": [],
+      "collapsed": false,
+      "maxHistory": 20,
+      "history": [
+        {
+          "query": "mutation DrawRectangle1 {\n  drawRectangle(id:\"37bf86bc-7a4a-4421-a243-af1914142ac2\", x:14, y:0, width:7, height:6, fillCharacter:\".\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle2 {\n  drawRectangle(id:\"37bf86bc-7a4a-4421-a243-af1914142ac2\", x:0, y:3, width:8, height:4, outlineCharacter:\"O\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle3 {\n  drawRectangle(id:\"37bf86bc-7a4a-4421-a243-af1914142ac2\", x:5, y:5, width:5, height:3, outlineCharacter:\"X\", fillCharacter:\"X\") {\n    id \n    board\n  }\n}\n\nmutation FloodFill1 {\n  floodFill(id:\"37bf86bc-7a4a-4421-a243-af1914142ac2\", x:0, y:0, fillCharacter:\"-\") {\n    id\n    board\n  }\n}",
+          "variables": null
+        }
+      ],
+      "graphiql:query": "mutation DrawRectangle1 {\n  drawRectangle(id:\"37bf86bc-7a4a-4421-a243-af1914142ac2\", x:14, y:0, width:7, height:6, fillCharacter:\".\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle2 {\n  drawRectangle(id:\"37bf86bc-7a4a-4421-a243-af1914142ac2\", x:0, y:3, width:8, height:4, outlineCharacter:\"O\") {\n    id \n    board\n  }\n}\n\nmutation DrawRectangle3 {\n  drawRectangle(id:\"37bf86bc-7a4a-4421-a243-af1914142ac2\", x:5, y:5, width:5, height:3, outlineCharacter:\"X\", fillCharacter:\"X\") {\n    id \n    board\n  }\n}\n\nmutation FloodFill1 {\n  floodFill(id:\"37bf86bc-7a4a-4421-a243-af1914142ac2\", x:0, y:0, fillCharacter:\"-\") {\n    id\n    board\n  }\n}",
+      "graphiql:variables": "",
+      "graphiql:queries": "{\"queries\":[{\"query\":\"mutation DrawRectangle1 {\\n  drawRectangle(id:\\\"37bf86bc-7a4a-4421-a243-af1914142ac2\\\", x:14, y:0, width:7, height:6, fillCharacter:\\\".\\\") {\\n    id \\n    board\\n  }\\n}\\n\\nmutation DrawRectangle2 {\\n  drawRectangle(id:\\\"37bf86bc-7a4a-4421-a243-af1914142ac2\\\", x:0, y:3, width:8, height:4, outlineCharacter:\\\"O\\\") {\\n    id \\n    board\\n  }\\n}\\n\\nmutation DrawRectangle3 {\\n  drawRectangle(id:\\\"37bf86bc-7a4a-4421-a243-af1914142ac2\\\", x:5, y:5, width:5, height:3, outlineCharacter:\\\"X\\\", fillCharacter:\\\"X\\\") {\\n    id \\n    board\\n  }\\n}\\n\\nmutation FloodFill1 {\\n  floodFill(id:\\\"37bf86bc-7a4a-4421-a243-af1914142ac2\\\", x:0, y:0, fillCharacter:\\\"-\\\") {\\n    id\\n    board\\n  }\\n}\",\"variables\":\"\",\"operationName\":\"DrawRectangle1\"}]}",
+      "graphiql:operationName": "FloodFill1",
+      "graphiql:editorFlex": -317,
+      "graphiql:variableEditorHeight": 200,
+      "graphiql:docExplorerWidth": 350
+    }
+  ]
+}
