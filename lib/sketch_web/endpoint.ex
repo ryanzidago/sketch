@@ -12,7 +12,7 @@ defmodule SketchWeb.Endpoint do
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
-  socket "/user-socket", SketchWeb.UserSocket
+  socket "/socket", SketchWeb.UserSocket
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phx.digest
