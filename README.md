@@ -1,5 +1,11 @@
 # Sketch
 
+## Demo:
+![](demo.gif)
+
+
+## Instructions:
+
 Sketch is a GraphQL API to draw on a canva. 
 
 The core functionalities of drawing on a canvas are implemented in [`canvas.ex`](lib/sketch/domain_models/canvas/canvas.ex).
