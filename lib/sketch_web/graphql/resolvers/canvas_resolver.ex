@@ -10,6 +10,7 @@ defmodule SketchWeb.Graphql.CanvasResolver do
     with %Canvas{} = canvas <- CanvasRepo.get(id) do
       {:ok, canvas}
     else
+      nil -> {:error, "Canvas not found"}
       error -> error
     end
   end
@@ -42,6 +43,7 @@ defmodule SketchWeb.Graphql.CanvasResolver do
          {:ok, canvas} <- CanvasRepo.update(canvas) do
       {:ok, canvas}
     else
+      nil -> {:error, "Canvas not found"}
       error -> error
     end
   end
@@ -52,6 +54,7 @@ defmodule SketchWeb.Graphql.CanvasResolver do
          {:ok, canvas} <- CanvasRepo.update(canvas) do
       {:ok, canvas}
     else
+      nil -> {:error, "Canvas not found"}
       error -> error
     end
   end
