@@ -13,7 +13,7 @@
 
     <div class="grid-links">
         <%= for canvas_id <- @canvas_ids do  %>
-            <%= live_patch canvas_id, to: SketchWeb.Router.Helpers.canvas_path(SketchWeb.Endpoint, :show, canvas_id) %><br>
+            <%= live_patch canvas_id, to: SketchWeb.Router.Helpers.canvas_path(@socket, :show, canvas_id) %><br>
         <% end %>
     </div>
 </div>

@@ -1,13 +1,14 @@
 defmodule SketchWeb.CanvasLive do
   use SketchWeb, :live_view
 
-  alias SketchWeb.{Endpoint, CanvasView, Graphql}
+  alias SketchWeb.{Endpoint, Graphql}
   alias Graphql.{Schema, CanvasQueries}
   alias Sketch.{Canvas, CanvasRepo}
   alias Canvas.EctoBoard
 
   alias Phoenix.Socket.Broadcast
 
+  @impl true
   def mount(_params, _session, socket) do
     subscribe_to_on_canvas_created()
 
