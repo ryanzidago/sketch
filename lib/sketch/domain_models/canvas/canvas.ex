@@ -16,16 +16,10 @@ defmodule Sketch.Canvas do
     timestamps()
   end
 
-  @doc """
-  Returns `true` if the given coordinates `x`, `y` are within the canvas.
-  """
-  defguard is_within_canvas(canvas, x, y)
-           when x in 0..canvas.width and y in 0..canvas.height
+  defguardp is_within_canvas(canvas, x, y)
+            when x in 0..canvas.width and y in 0..canvas.height
 
-  @doc """
-  Returns `true` if the given `character` is a 1-byte bitstring.
-  """
-  defguard is_ascii(character) when is_bitstring(character) and byte_size(character) == 1
+  defguardp is_ascii(character) when is_bitstring(character) and byte_size(character) == 1
 
   @doc """
   Creates a new canvas.
