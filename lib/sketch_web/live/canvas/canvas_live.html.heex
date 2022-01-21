@@ -1,7 +1,7 @@
 <div class="grid-container">
     <div class="grid-table">
         <table class="canvas">
-            <%= for row <- SketchWeb.CanvasView.as_rows(@board, @dimensions) do %>
+            <%= for row <- as_rows(@board, @dimensions) do %>
                 <tr>
                     <%= for cell <- row do  %>
                         <td class="cell"><%=cell%></td>
@@ -13,7 +13,7 @@
 
     <div class="grid-links">
         <%= for canvas_id <- @canvas_ids do  %>
-            <%= link canvas_id, to: SketchWeb.Router.Helpers.canvas_path(SketchWeb.Endpoint, :show, canvas_id) %><br>
+            <%= live_patch canvas_id, to: SketchWeb.Router.Helpers.canvas_path(SketchWeb.Endpoint, :show, canvas_id) %><br>
         <% end %>
     </div>
 </div>
